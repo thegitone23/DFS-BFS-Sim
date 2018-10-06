@@ -11,35 +11,58 @@ from OpenGL.GLU import *
 import math
 
 #defing functions for basic shapes
-def drawPixel(x,y):
+def drawPixel(x, y):
     glBegin(GL_POINTS)
-    glVertex2f(x,y)
+    glVertex2f(x, y)
     glEnd()
 
-def drawLine(a,b,c,d):
+def drawLine(a, b, c, d):
     glBegin(GL_LINES)
-    glVertex2f(a,b)
-    glVertex2f(c,d)
+    glVertex2f(a, b)
+    glVertex2f(c, d)
     glEnd()
 
-def drawCircle(x,y,r=50):
-    toRad = (math.pi/180)
-    for i in range (0,360):
-        drawPixel(x+(r*math.cos(toRad*i)),y+(r*math.sin(toRad*i)))
+# def drawCircle(x,y,r=50):
+#     toRad = (math.pi/180)
+#     for i in range (0,360):
+#         drawPixel(x+(r*math.cos(toRad*i)),y+(r*math.sin(toRad*i)))
 
-#main drawing logic
+def drawHollowCircle(x, y, r=50):
+    lineAmount = 100  # no. of lines used to draw circle
+    twoPi = math.pi * 2
+    glBegin(GL_LINE_LOOP)
+    for i in range(lineAmount):
+        glVertex2f(
+            x + (r * math.cos(i * twoPi / lineAmount)),
+            y + (r * math.sin(i * twoPi / lineAmount))
+        )
+    glEnd()
+
+def drawFilledCircle(x, y, r=50):
+    triangleAmount = 30  # no. of traingles used to draw circle
+    twoPi = math.pi * 2
+    glBegin(GL_TRIANGLE_FAN)
+    for i in range(triangleAmount):
+        glVertex2f(
+            x + (r * math.cos(i * twoPi / triangleAmount)),
+            y + (r * math.sin(i * twoPi / triangleAmount))
+        )
+    glEnd()
+
+# main drawing logic
 def draw():
     #coding logic here
-    drawCircle(0,0)
+    drawHollowCircle(100, 100)
+    drawFilledCircle(300, 100)
 
 
 #main function
 def main():
     #boiler-plate setup code
     pygame.init()
-    display = (800,600) #the pygame windows resolution
+    display = (800, 600) #the pygame windows resolution
     pygame.display.set_mode(display, DOUBLEBUF|OPENGL)
-    gluOrtho2D(0,800,600,0)
+    gluOrtho2D(0, 800, 600, 0)
 
     #the main loop 
     while True:
