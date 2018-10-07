@@ -22,11 +22,6 @@ def drawLine(a, b, c, d):
     glVertex2f(c, d)
     glEnd()
 
-# def drawCircle(x,y,r=50):
-#     toRad = (math.pi/180)
-#     for i in range (0,360):
-#         drawPixel(x+(r*math.cos(toRad*i)),y+(r*math.sin(toRad*i)))
-
 def drawHollowCircle(x, y, r=50):
     lineAmount = 100  # no. of lines used to draw circle
     twoPi = math.pi * 2
@@ -49,11 +44,16 @@ def drawFilledCircle(x, y, r=50):
         )
     glEnd()
 
+position = [
+    (100, 100),
+    (200, 100)
+]
+
 # main drawing logic
 def draw():
     #coding logic here
-    drawHollowCircle(100, 100)
-    drawFilledCircle(300, 100)
+    for pos in position:
+        drawHollowCircle(pos[0], pos[1])
 
 
 #main function
@@ -72,6 +72,12 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+            # if any mouse button is pressed
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                # if the left button is pressed
+                if event.button == 1:
+                    pos = pygame.mouse.get_pos()
+                    position.append(pos)
 
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT) #clear the frame
         draw() #calling the function with drawing logic
