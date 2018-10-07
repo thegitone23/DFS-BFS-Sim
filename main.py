@@ -77,7 +77,16 @@ def main():
                 # if the left button is pressed
                 if event.button == 1:
                     pos = pygame.mouse.get_pos()
-                    position.append(pos)
+                    flag = 0
+                    for pos1 in position:
+                        # distance with other circles
+                        dist = math.sqrt((pos[0] - pos1[0])**2 + (pos[1] - pos1[1])**2)
+                        # to check whether any circle will overlap
+                        if(dist < 100):
+                            flag = 1
+                            break
+                    if(flag == 0):
+                        position.append(pos)
 
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT) #clear the frame
         draw() #calling the function with drawing logic
