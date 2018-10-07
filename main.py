@@ -9,7 +9,10 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 #other imports
 import math
-
+#declaring constants
+RAD = 30
+WIDTH = 800
+HEIGHT = 600
 #defing functions for basic shapes
 def drawPixel(x, y):
     glBegin(GL_POINTS)
@@ -22,7 +25,7 @@ def drawLine(a, b, c, d):
     glVertex2f(c, d)
     glEnd()
 
-def drawHollowCircle(x, y, r=50):
+def drawHollowCircle(x, y, r=RAD):
     lineAmount = 100  # no. of lines used to draw circle
     twoPi = math.pi * 2
     glBegin(GL_LINE_LOOP)
@@ -33,7 +36,7 @@ def drawHollowCircle(x, y, r=50):
         )
     glEnd()
 
-def drawFilledCircle(x, y, r=50):
+def drawFilledCircle(x, y, r=RAD):
     triangleAmount = 30  # no. of traingles used to draw circle
     twoPi = math.pi * 2
     glBegin(GL_TRIANGLE_FAN)
@@ -45,8 +48,7 @@ def drawFilledCircle(x, y, r=50):
     glEnd()
 
 position = [
-    (100, 100),
-    (200, 100)
+
 ]
 
 # main drawing logic
@@ -60,9 +62,9 @@ def draw():
 def main():
     #boiler-plate setup code
     pygame.init()
-    display = (800, 600) #the pygame windows resolution
+    display = (WIDTH, HEIGHT) #the pygame windows resolution
     pygame.display.set_mode(display, DOUBLEBUF|OPENGL)
-    gluOrtho2D(0, 800, 600, 0)
+    gluOrtho2D(0, WIDTH, HEIGHT, 0)
 
     #the main loop 
     while True:
@@ -78,11 +80,15 @@ def main():
                 if event.button == 1:
                     pos = pygame.mouse.get_pos()
                     flag = 0
+                    if((pos[0] <= RAD or pos[0] >= WIDTH-RAD ) or (pos[1] <= RAD or pos[1] >= HEIGHT-RAD)):
+                        flag = 1
                     for pos1 in position:
+                        if(flag == 1):
+                            break
                         # distance with other circles
                         dist = math.sqrt((pos[0] - pos1[0])**2 + (pos[1] - pos1[1])**2)
                         # to check whether any circle will overlap
-                        if(dist < 100):
+                        if(dist <= 2*RAD ):
                             flag = 1
                             break
                     if(flag == 0):
