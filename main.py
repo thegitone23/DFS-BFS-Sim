@@ -13,6 +13,13 @@ import math
 RAD = 30
 WIDTH = 800
 HEIGHT = 600
+
+#data structure
+graph = {
+    'cord' : [],  # cordinates of node 
+    'negh' : []   # coordinates of neghbhour elements
+}
+
 #defing functions for basic shapes
 def drawPixel(x, y):
     glBegin(GL_POINTS)
@@ -93,7 +100,9 @@ def main():
                             break
                     if(flag == 0):
                         position.append(pos)
-
+        for pos in position:
+            graph['cord'].append((pos[0], pos[1])) 
+                             
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT) #clear the frame
         draw() #calling the function with drawing logic
         pygame.display.flip() #bring up the updated screen
