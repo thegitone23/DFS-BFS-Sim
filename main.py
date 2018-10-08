@@ -14,12 +14,17 @@ RAD = 30
 WIDTH = 800
 HEIGHT = 600
 
-#data structure
+# data structure for nodes
 graph = {
     
 }
 
-#defing functions for basic shapes
+# for handling positions of the nodes
+position = [
+
+]
+
+# defining functions for basic shapes
 def drawPixel(x, y):
     glBegin(GL_POINTS)
     glVertex2f(x, y)
@@ -53,37 +58,39 @@ def drawFilledCircle(x, y, r=RAD):
         )
     glEnd()
 
-position = [
-
-]
-
 # main drawing logic
 def draw():
-    #coding logic here
+    # coding logic here
     for pos in position:
         drawHollowCircle(pos[0], pos[1])
 
 
-#main function
+# main function
 def main():
-    #boiler-plate setup code
+    # boiler-plate setup code
     pygame.init()
-    display = (WIDTH, HEIGHT) #the pygame windows resolution
+    display = (WIDTH, HEIGHT) # the pygame windows resolution
     pygame.display.set_mode(display, DOUBLEBUF|OPENGL)
     gluOrtho2D(0, WIDTH, HEIGHT, 0)
 
-    #the main loop 
+    mainKey = 97
+    # the main loop
     while True:
 
-        #event hadling loop
+        # event hadling loop
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+
+            if event.type == pygame.KEYDOWN:
+                mainKey = event.key
+                print(pygame.key.name(mainKey), mainKey)
+
             # if any mouse button is pressed
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # if the left button is pressed
-                if event.button == 1:
+                if event.button == 1 and pygame.key.name(mainKey) == 'c':
                     pos = pygame.mouse.get_pos()
                     flag = 0
                     if((pos[0] <= RAD or pos[0] >= WIDTH-RAD ) or (pos[1] <= RAD or pos[1] >= HEIGHT-RAD)):
@@ -100,10 +107,11 @@ def main():
                     if(flag == 0):
                         position.append(pos)
                         graph[pos]=[]
-        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT) #clear the frame
-        draw() #calling the function with drawing logic
-        pygame.display.flip() #bring up the updated screen
 
-#calling main()
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT) #clear the frame
+        draw() # calling the function with drawing logic
+        pygame.display.flip() # bring up the updated screen
+
+# calling main()
 main()
 
