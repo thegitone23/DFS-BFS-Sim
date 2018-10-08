@@ -16,8 +16,7 @@ HEIGHT = 600
 
 #data structure
 graph = {
-    'cord' : [],  # cordinates of node 
-    'negh' : []   # coordinates of neghbhour elements
+    
 }
 
 #defing functions for basic shapes
@@ -100,9 +99,7 @@ def main():
                             break
                     if(flag == 0):
                         position.append(pos)
-        for pos in position:
-            graph['cord'].append((pos[0], pos[1])) 
-                             
+                        graph[pos]=[]
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT) #clear the frame
         draw() #calling the function with drawing logic
         pygame.display.flip() #bring up the updated screen
