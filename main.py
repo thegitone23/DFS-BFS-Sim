@@ -73,7 +73,12 @@ def main():
     pygame.display.set_mode(display, DOUBLEBUF|OPENGL)
     gluOrtho2D(0, WIDTH, HEIGHT, 0)
 
-    mainKey = 97
+    #default mode
+    mode="view-only" 
+    print("current mode is "+mode)
+    print("key-bindings are")
+    print("i for insert, c for connect, d for delete, any other key for view-only")
+
     # the main loop
     while True:
 
@@ -82,15 +87,23 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-
+            #keyboard input handling
             if event.type == pygame.KEYDOWN:
-                mainKey = event.key
-                print(pygame.key.name(mainKey), mainKey)
+                keyPressed = event.key
+                if pygame.key.name(keyPressed) == 'i' or pygame.key.name(keyPressed) == 'I':
+                    mode = "insert"
+                elif pygame.key.name(keyPressed) == 'c' or pygame.key.name(keyPressed) == 'C':
+                    mode = "connect"
+                elif pygame.key.name(keyPressed) == 'd' or pygame.key.name(keyPressed) == 'D':
+                    mode = "delete"
+                else:
+                    mode = "view-only"
+                print("key "+pygame.key.name(keyPressed)+" pressed "+", mode is "+mode)
 
-            # if any mouse button is pressed
+            #mouse input handling
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # if the left button is pressed
-                if event.button == 1 and pygame.key.name(mainKey) == 'c':
+                if event.button == 1 and mode=="insert":
                     pos = pygame.mouse.get_pos()
                     flag = 0
                     if((pos[0] <= RAD or pos[0] >= WIDTH-RAD ) or (pos[1] <= RAD or pos[1] >= HEIGHT-RAD)):
@@ -114,4 +127,3 @@ def main():
 
 # calling main()
 main()
-
