@@ -80,14 +80,16 @@ def main():
     pygame.display.set_mode(display, DOUBLEBUF|OPENGL)
     gluOrtho2D(0, WIDTH, HEIGHT, 0)
 
-    #default mode
+    # default mode
     mode="view-only" 
     print("current mode is "+mode)
     print("key-bindings are")
     print("i for insert, c for connect, d for delete, any other key for view-only")
 
     connections = 0
-    tempNode = None
+    conNode = None
+    deletions = 0
+    delNode = 0
     
     # the main loop
     while True:
@@ -97,7 +99,7 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            #keyboard input handling
+            # keyboard input handling
             if event.type == pygame.KEYDOWN:
                 keyPressed = event.key
                 if pygame.key.name(keyPressed) == 'i':
@@ -108,7 +110,7 @@ def main():
                     mode = "delete"
                 else:
                     mode = "view-only"
-                print("key "+pygame.key.name(keyPressed)+" pressed "+", mode is "+mode)
+                print("key "+pygame.key.name(keyPressed)+" pressed, mode is "+mode)
 
             #mouse input handling
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -137,19 +139,35 @@ def main():
                     pos = pygame.mouse.get_pos()
                     for node in graph:
                         if (distance(node[0], node[1], pos[0], pos[1]) <= RAD):
-                            print('lol')
                             connections += 1
                             if(connections == 1):
-                                tempNode = node
-                                print('tempNode', tempNode)
+                                conNode = node
+                                print('conNode', conNode)
                                 break
                             elif(connections == 2):
                                 print('node', node)
-                                graph[tempNode].append(node)
-                                # graph[node].append(tempNode)
+                                graph[conNode].append(node)
                                 connections = 0
                                 break
 
+                # if the left button is pressed and delete mode is on
+                if event.button == 1 and mode == "delete":
+                    pos = pygame.mouse.get_pos()
+                    for node in graph:
+                        if (distance(node[0], node[1], pos[0], pos[1]) <= RAD):
+                            deletions += 1
+                            if(deletions == 1):
+                                delNode = node
+                                print('delNode', delNode)
+                                break
+                            elif(deletions == 2):
+                                print('node', node)
+                                try:
+                                    graph[delNode].remove(node)
+                                except:
+                                    graph[node].remove(delNode)
+                                deletions = 0
+                                break
 
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT) #clear the frame
         draw() # calling the function with drawing logic
