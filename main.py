@@ -24,6 +24,10 @@ position = [
 
 ]
 
+# distance between two points (x1, y1), (x2, y2)
+def distance(x1, y1, x2, y2):
+    return math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
+
 # defining functions for basic shapes
 def drawPixel(x, y):
     glBegin(GL_POINTS)
@@ -63,7 +67,10 @@ def draw():
     # coding logic here
     for pos in position:
         drawHollowCircle(pos[0], pos[1])
-
+    for node in graph:
+        if(graph[node]):
+            for endPoint in graph[node]:
+                drawLine(node[0], node[1], endPoint[0], endPoint[1])
 
 # main function
 def main():
@@ -79,6 +86,9 @@ def main():
     print("key-bindings are")
     print("i for insert, c for connect, d for delete, any other key for view-only")
 
+    connections = 0
+    tempNode = None
+    
     # the main loop
     while True:
 
@@ -102,7 +112,7 @@ def main():
 
             #mouse input handling
             if event.type == pygame.MOUSEBUTTONDOWN:
-                # if the left button is pressed
+                # if the left button is pressed and insert mode is on
                 if event.button == 1 and mode=="insert":
                     pos = pygame.mouse.get_pos()
                     flag = 0
@@ -112,7 +122,7 @@ def main():
                         if(flag == 1):
                             break
                         # distance with other circles
-                        dist = math.sqrt((pos[0] - pos1[0])**2 + (pos[1] - pos1[1])**2)
+                        dist = distance(pos[0], pos[1], pos1[0], pos1[1])
                         # to check whether any circle will overlap
                         if(dist <= 2*RAD ):
                             flag = 1
@@ -120,6 +130,26 @@ def main():
                     if(flag == 0):
                         position.append(pos)
                         graph[pos]=[]
+                        print(graph)
+                
+                # if the left button is pressed and connect mode is on
+                if event.button == 1 and mode == "connect":
+                    pos = pygame.mouse.get_pos()
+                    for node in graph:
+                        if (distance(node[0], node[1], pos[0], pos[1]) <= RAD):
+                            print('lol')
+                            connections += 1
+                            if(connections == 1):
+                                tempNode = node
+                                print('tempNode', tempNode)
+                                break
+                            elif(connections == 2):
+                                print('node', node)
+                                graph[tempNode].append(node)
+                                # graph[node].append(tempNode)
+                                connections = 0
+                                break
+
 
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT) #clear the frame
         draw() # calling the function with drawing logic
