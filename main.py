@@ -100,11 +100,11 @@ def main():
             #keyboard input handling
             if event.type == pygame.KEYDOWN:
                 keyPressed = event.key
-                if pygame.key.name(keyPressed) == 'i' or pygame.key.name(keyPressed) == 'I':
+                if pygame.key.name(keyPressed) == 'i':
                     mode = "insert"
-                elif pygame.key.name(keyPressed) == 'c' or pygame.key.name(keyPressed) == 'C':
+                elif pygame.key.name(keyPressed) == 'c':
                     mode = "connect"
-                elif pygame.key.name(keyPressed) == 'd' or pygame.key.name(keyPressed) == 'D':
+                elif pygame.key.name(keyPressed) == 'd':
                     mode = "delete"
                 else:
                     mode = "view-only"
