@@ -19,10 +19,6 @@ graph = {
     
 }
 
-# for handling positions of the nodes
-position = [
-
-]
 
 # distance between two points (x1, y1), (x2, y2)
 def distance(x1, y1, x2, y2):
@@ -121,7 +117,7 @@ def main():
                     flag = 0
                     if((pos[0] <= RAD or pos[0] >= WIDTH-RAD ) or (pos[1] <= RAD or pos[1] >= HEIGHT-RAD)):
                         flag = 1
-                    for pos1 in position:
+                    for pos1 in graph:
                         if(flag == 1):
                             break
                         # distance with other circles
