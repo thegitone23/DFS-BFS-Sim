@@ -79,7 +79,7 @@ def main():
     mode="view-only" 
     print("current mode is "+mode)
     print("key-bindings are")
-    print("i for insert, c for connect, d for delete, any other key for view-only")
+    print("i for insert, c for connect, d for disconnect,e for eliminate, any other key for view-only")
 
     connections = 0
     conNode = None
@@ -102,7 +102,9 @@ def main():
                 elif pygame.key.name(keyPressed) == 'c':
                     mode = "connect"
                 elif pygame.key.name(keyPressed) == 'd':
-                    mode = "delete"
+                    mode = "disconnect"
+                elif pygame.key.name(keyPressed) == 'e':
+                    mode = "eliminate"
                 else:
                     mode = "view-only"
                 print("key "+pygame.key.name(keyPressed)+" pressed, mode is "+mode)
@@ -147,8 +149,8 @@ def main():
                                 break
                             
 
-                # if the left button is pressed and delete mode is on
-                if event.button == 1 and mode == "delete":
+                # if the left button is pressed and disconnect mode is on
+                if event.button == 1 and mode == "disconnect":
                     pos = pygame.mouse.get_pos()
                     for node in graph:
                         if (distance(node[0], node[1], pos[0], pos[1]) <= RAD):
@@ -164,6 +166,19 @@ def main():
                                     graph[node].remove(delNode)
                                 deletions = 0
                                 break
+
+                # if the left button is pressed and elimenate mode is on
+                if event.button == 1 and mode == "eliminate":
+                    pos = pygame.mouse.get_pos()
+                    for node in graph:
+                        if (distance(node[0], node[1], pos[0], pos[1]) <= RAD):
+                            for key in graph:
+                                for temp in graph[key]:
+                                    if temp == node:
+                                        graph[key].remove(temp)
+                            del graph[node]
+                            break
+
 
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT) #clear the frame
         draw() # calling the function with drawing logic
