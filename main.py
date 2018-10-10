@@ -65,7 +65,7 @@ def drawFilledCircle(x, y, r=RAD):
 # main drawing logic
 def draw():
     # coding logic here
-    for pos in position:
+    for pos in graph:
         drawHollowCircle(pos[0], pos[1])
     for node in graph:
         if(graph[node]):
@@ -93,6 +93,7 @@ def main():
     
     # the main loop
     while True:
+        drawFilledCircle(100,5,45) 
 
         # event hadling loop
         for event in pygame.event.get():
@@ -130,9 +131,8 @@ def main():
                             flag = 1
                             break
                     if(flag == 0):
-                        position.append(pos)
                         graph[pos]=[]
-                        print(graph)
+                        
                 
                 # if the left button is pressed and connect mode is on
                 if event.button == 1 and mode == "connect":
@@ -168,6 +168,7 @@ def main():
                                     graph[node].remove(delNode)
                                 deletions = 0
                                 break
+                               
 
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT) #clear the frame
         draw() # calling the function with drawing logic
