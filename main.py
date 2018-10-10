@@ -19,7 +19,6 @@ graph = {
     
 }
 
-
 # distance between two points (x1, y1), (x2, y2)
 def distance(x1, y1, x2, y2):
     return math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
@@ -89,7 +88,6 @@ def main():
     
     # the main loop
     while True:
-        drawFilledCircle(100,5,45) 
 
         # event hadling loop
         for event in pygame.event.get():
@@ -128,7 +126,7 @@ def main():
                             break
                     if(flag == 0):
                         graph[pos]=[]
-                        
+                        print(graph)
                 
                 # if the left button is pressed and connect mode is on
                 if event.button == 1 and mode == "connect":
@@ -141,10 +139,13 @@ def main():
                                 print('conNode', conNode)
                                 break
                             elif(connections == 2):
-                                print('node', node)
-                                graph[conNode].append(node)
+                                if (node != conNode) and (not (node in graph[conNode])): 
+                                    print('node', node)
+                                    graph[conNode].append(node)
+                                    graph[node].append(conNode) 
                                 connections = 0
                                 break
+                            
 
                 # if the left button is pressed and delete mode is on
                 if event.button == 1 and mode == "delete":
@@ -158,13 +159,11 @@ def main():
                                 break
                             elif(deletions == 2):
                                 print('node', node)
-                                try:
+                                if delNode in graph[node]:
                                     graph[delNode].remove(node)
-                                except:
                                     graph[node].remove(delNode)
                                 deletions = 0
                                 break
-                               
 
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT) #clear the frame
         draw() # calling the function with drawing logic
