@@ -20,7 +20,14 @@ graph = {
     
 }
 # to be used with traversing algorithms
-visited={}
+visited={
+
+}
+
+# to be used in BFS
+queue = [
+
+]
 
 # distance between two points (x1, y1), (x2, y2)
 def distance(x1, y1, x2, y2):
@@ -82,6 +89,21 @@ def DFS(rootNode):
         for i in graph[rootNode]:
             DFS(i)
 
+# BFS algorithm
+def BFS():
+    global queue
+    node = queue.pop(0)
+    for tempNode in graph[node]:
+        if(not(tempNode in queue)):
+            queue.append(tempNode)
+    if(visited[node] == False):
+        visited[node] = True
+    TraversalDraw()
+    for x in visited:
+        if(visited[x] == False):
+            time.sleep(1)
+            BFS()
+
 # main drawing logic
 def draw():
     # coding logic here
@@ -104,12 +126,12 @@ def main():
     mode="view-only" 
     print("current mode is "+mode)
     print("key-bindings are")
-    print("i for insert, c for connect, d for disconnect, e for eliminate, a for DFS , any other key for view-only")
+    print("i for insert, c for connect, d for disconnect, e for eliminate, a for DFS , b for BFS, any other key for view-only")
 
     connections = 0
     conNode = None
     deletions = 0
-    delNode = 0
+    delNode = None
     
     # the main loop
     while True:
@@ -132,8 +154,11 @@ def main():
                     mode = "eliminate"
                 elif pygame.key.name(keyPressed) == 'a':
                     mode = "DFS"
+                elif pygame.key.name(keyPressed) == 'b':
+                    mode = "BFS"
                 else:
                     mode = "view-only"
+                    print("i for insert, c for connect, d for disconnect, e for eliminate, a for DFS , b for BFS, any other key for view-only")
                 print("key "+pygame.key.name(keyPressed)+" pressed, mode is "+mode)
 
             #mouse input handling
@@ -158,7 +183,7 @@ def main():
                         print(graph)
                 
                 # if the left button is pressed and connect mode is on
-                if event.button == 1 and mode == "connect":
+                elif event.button == 1 and mode == "connect":
                     pos = pygame.mouse.get_pos()
                     for node in graph:
                         if (distance(node[0], node[1], pos[0], pos[1]) <= RAD):
@@ -177,7 +202,7 @@ def main():
                             
 
                 # if the left button is pressed and disconnect mode is on
-                if event.button == 1 and mode == "disconnect":
+                elif event.button == 1 and mode == "disconnect":
                     pos = pygame.mouse.get_pos()
                     for node in graph:
                         if (distance(node[0], node[1], pos[0], pos[1]) <= RAD):
@@ -195,7 +220,7 @@ def main():
                                 break
 
                 # if the left button is pressed and elimenate mode is on
-                if event.button == 1 and mode == "eliminate":
+                elif event.button == 1 and mode == "eliminate":
                     pos = pygame.mouse.get_pos()
                     for node in graph:
                         if (distance(node[0], node[1], pos[0], pos[1]) <= RAD):
@@ -205,8 +230,9 @@ def main():
                                         graph[key].remove(temp)
                             del graph[node]
                             break
+
                 # DFS TIME
-                if event.button == 1 and mode == "DFS":
+                elif event.button == 1 and mode == "DFS":
                     pos = pygame.mouse.get_pos()
                     for node in graph:
                         if (distance(node[0], node[1], pos[0], pos[1]) <= RAD):
@@ -215,6 +241,24 @@ def main():
                                 visited[i]=False
                             DFS(node)
                             print("DFS COMPLETED, Setting mode to view-only")
+                            mode="view-only"
+                            break
+
+                # BFS TIME
+                elif event.button == 1 and mode == "BFS":
+                    pos = pygame.mouse.get_pos()
+                    for node in graph:
+                        if (distance(node[0], node[1], pos[0], pos[1]) <= RAD):
+                            #clearing the visited list 
+                            for i in graph:
+                                visited[i]=False
+                            global queue
+                            print(queue)
+                            del queue[:]
+                            queue.append(node)
+                            BFS()
+                            time.sleep(3)
+                            print("BFS COMPLETED, Setting mode to view-only")
                             mode="view-only"
                             break
 
