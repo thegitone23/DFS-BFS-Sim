@@ -9,6 +9,7 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 #other imports
 import math
+import time
 #declaring constants
 RAD = 30
 WIDTH = 800
@@ -18,6 +19,8 @@ HEIGHT = 600
 graph = {
     
 }
+# to be used with traversing algorithms
+visited={}
 
 # distance between two points (x1, y1), (x2, y2)
 def distance(x1, y1, x2, y2):
@@ -57,6 +60,28 @@ def drawFilledCircle(x, y, r=RAD):
         )
     glEnd()
 
+# drawing logic while traversing the graph
+def TraversalDraw():    
+    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT) #clear the frame
+    # bring up the updated screen
+    for i in graph:
+        if visited[i] == True:
+            drawFilledCircle(i[0],i[1])
+    for i in graph:
+        if visited[i] == True and graph[i]:
+            for endpoint in graph[i]:
+                if visited[endpoint] == True:
+                    drawLine(i[0],i[1],endpoint[0],endpoint[1])
+    pygame.display.flip()
+# the DFS algorithm
+def DFS(rootNode):
+    if (visited[rootNode] == False) :
+        visited[rootNode]=True
+        TraversalDraw()
+        time.sleep(1)
+        for i in graph[rootNode]:
+            DFS(i)
+
 # main drawing logic
 def draw():
     # coding logic here
@@ -79,7 +104,7 @@ def main():
     mode="view-only" 
     print("current mode is "+mode)
     print("key-bindings are")
-    print("i for insert, c for connect, d for disconnect,e for eliminate, any other key for view-only")
+    print("i for insert, c for connect, d for disconnect, e for eliminate, a for DFS , any other key for view-only")
 
     connections = 0
     conNode = None
@@ -105,6 +130,8 @@ def main():
                     mode = "disconnect"
                 elif pygame.key.name(keyPressed) == 'e':
                     mode = "eliminate"
+                elif pygame.key.name(keyPressed) == 'a':
+                    mode = "DFS"
                 else:
                     mode = "view-only"
                 print("key "+pygame.key.name(keyPressed)+" pressed, mode is "+mode)
@@ -178,7 +205,18 @@ def main():
                                         graph[key].remove(temp)
                             del graph[node]
                             break
-
+                # DFS TIME
+                if event.button == 1 and mode == "DFS":
+                    pos = pygame.mouse.get_pos()
+                    for node in graph:
+                        if (distance(node[0], node[1], pos[0], pos[1]) <= RAD):
+                            #clearing the visited list 
+                            for i in graph:
+                                visited[i]=False
+                            DFS(node)
+                            print("DFS COMPLETED, Setting mode to view-only")
+                            mode="view-only"
+                            break
 
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT) #clear the frame
         draw() # calling the function with drawing logic
