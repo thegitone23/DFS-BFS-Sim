@@ -1,19 +1,18 @@
-#This is a pyOpenGL+pygame project targeted to simulate DFS algorithm
+# This is a pyOpenGL+pygame project targeted to simulate DFS and BFS algorithms
 
-#importing stuff
-#pygame imports
+# importing stuff
+
+# pygame imports
 import pygame
 from pygame.locals import *
-#opengl imports
-from OpenGL.GL import *
-from OpenGL.GLU import *
-#other imports
-import math
+
+# python library imports
 import time
-#declaring constants
-RAD = 30
-WIDTH = 800
-HEIGHT = 600
+
+# local imports
+from drawingPrimitives import *
+
+# global data structures
 
 # data structure for nodes
 graph = {
@@ -29,57 +28,6 @@ queue = [
 
 ]
 
-# distance between two points (x1, y1), (x2, y2)
-def distance(x1, y1, x2, y2):
-    return math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
-
-# defining functions for basic shapes
-def drawPixel(x, y):
-    glBegin(GL_POINTS)
-    glVertex2f(x, y)
-    glEnd()
-
-def drawLine(a, b, c, d):
-    glBegin(GL_LINES)
-    glVertex2f(a, b)
-    glVertex2f(c, d)
-    glEnd()
-
-def drawHollowCircle(x, y, r=RAD):
-    lineAmount = 100  # no. of lines used to draw circle
-    twoPi = math.pi * 2
-    glBegin(GL_LINE_LOOP)
-    for i in range(lineAmount):
-        glVertex2f(
-            x + (r * math.cos(i * twoPi / lineAmount)),
-            y + (r * math.sin(i * twoPi / lineAmount))
-        )
-    glEnd()
-
-def drawFilledCircle(x, y, r=RAD):
-    triangleAmount = 30  # no. of traingles used to draw circle
-    twoPi = math.pi * 2
-    glBegin(GL_TRIANGLE_FAN)
-    for i in range(triangleAmount):
-        glVertex2f(
-            x + (r * math.cos(i * twoPi / triangleAmount)),
-            y + (r * math.sin(i * twoPi / triangleAmount))
-        )
-    glEnd()
-
-# drawing logic while traversing the graph
-def TraversalDraw():    
-    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT) #clear the frame
-    # bring up the updated screen
-    for i in graph:
-        if visited[i] == True:
-            drawFilledCircle(i[0],i[1])
-    for i in graph:
-        if visited[i] == True and graph[i]:
-            for endpoint in graph[i]:
-                if visited[endpoint] == True:
-                    drawLine(i[0],i[1],endpoint[0],endpoint[1])
-    pygame.display.flip()
 # the DFS algorithm
 def DFS(rootNode):
     if (visited[rootNode] == False) :
@@ -99,10 +47,24 @@ def BFS():
     if(visited[node] == False):
         visited[node] = True
     TraversalDraw()
+    time.sleep(1)
     for x in visited:
-        if(visited[x] == False):
-            time.sleep(1)
+        if(visited[x] == False):            
             BFS()
+
+# drawing logic while traversing the graph
+def TraversalDraw():    
+    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT) #clear the frame
+    # bring up the updated screen
+    for i in graph:
+        if visited[i] == True:
+            drawFilledCircle(i[0],i[1])
+    for i in graph:
+        if visited[i] == True and graph[i]:
+            for endpoint in graph[i]:
+                if visited[endpoint] == True:
+                    drawLine(i[0],i[1],endpoint[0],endpoint[1])
+    pygame.display.flip()
 
 # main drawing logic
 def draw():
@@ -181,7 +143,7 @@ def main():
                     if(flag == 0):
                         graph[pos]=[]
                         print(graph)
-                
+
                 # if the left button is pressed and connect mode is on
                 elif event.button == 1 and mode == "connect":
                     pos = pygame.mouse.get_pos()
@@ -257,7 +219,6 @@ def main():
                             del queue[:]
                             queue.append(node)
                             BFS()
-                            time.sleep(3)
                             print("BFS COMPLETED, Setting mode to view-only")
                             mode="view-only"
                             break
