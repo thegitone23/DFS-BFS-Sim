@@ -40,6 +40,8 @@ def DFS(rootNode):
 # BFS algorithm
 def BFS():
     global queue
+    if(len(queue) == 0):
+        return 0
     node = queue.pop(0)
     for tempNode in graph[node]:
         if(not(tempNode in queue)):
@@ -224,6 +226,7 @@ def main():
                             break
 
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT) #clear the frame
+        glClearColor(0.607, 0.278, 0.3, 1) # set background color
         draw() # calling the function with drawing logic
         pygame.display.flip() # bring up the updated screen
 
