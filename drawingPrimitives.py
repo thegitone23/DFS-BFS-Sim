@@ -1,14 +1,12 @@
-#opengl imports
 from OpenGL.GL import *
 from OpenGL.GLU import *
-
-#python library imports
 import math
 
-#declaring constants
 RAD = 30
 WIDTH = 800
 HEIGHT = 600
+LEFT = 1000
+RIGHT = 900
 
 # distance between two points (x1, y1), (x2, y2)
 def distance(x1, y1, x2, y2):
@@ -47,3 +45,6 @@ def drawFilledCircle(x, y, r=RAD):
             y + (r * math.sin(i * twoPi / triangleAmount))
         )
     glEnd()
+
+def getDepth(x=LEFT, y=RIGHT):
+    return x-y
